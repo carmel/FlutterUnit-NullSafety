@@ -18,14 +18,14 @@ class AuthenticBloc extends Bloc<AuthEvent, AuthenticState> {
     AuthEvent event,
   ) async* {
     if (event is AppStarted) {
-      String token = await LocalStorage.get(LocalStorage.tokenKey);
-      String userJson = await LocalStorage.get(LocalStorage.userKey);
+      String? token = await LocalStorage.get(LocalStorage.tokenKey);
+      String? userJson = await LocalStorage.get(LocalStorage.userKey);
       if (token != null && userJson != null) {
         bool disable = JwtDecoder.isExpired(token);
         if (!disable) {
           HttpUtil.getInstance().setToken(token);
           yield AuthSuccess(User.fromJson(json.decode(userJson)));
-        }else{
+        } else {
           // 说明 token 过期
           await _removeToken();
           await _removeUser();
@@ -48,7 +48,6 @@ class AuthenticBloc extends Bloc<AuthEvent, AuthenticState> {
     await LocalStorage.save(LocalStorage.tokenKey, token);
   }
 
-
   // 持久化 token
   Future<void> _removeToken() async {
     await LocalStorage.remove(LocalStorage.tokenKey);
@@ -63,6 +62,4 @@ class AuthenticBloc extends Bloc<AuthEvent, AuthenticState> {
   Future<void> _persistUser(User? user) async {
     await LocalStorage.save(LocalStorage.userKey, json.encode(user));
   }
-
-
 }

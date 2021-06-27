@@ -21,7 +21,7 @@ import 'local_storage.dart';
 class AppStart {
   // 初始化 App 固化的配置数据
   Future<GlobalState> initApp() async {
-    SharedPreferences prefs = await (LocalStorage.sp as FutureOr<SharedPreferences>);
+    SharedPreferences prefs = await (LocalStorage.sp);
     //数据库不存在，执行拷贝
     String databasesPath = await getDatabasesPath();
     String dbPath = path.join(databasesPath, "flutter.db");
